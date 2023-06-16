@@ -1,31 +1,8 @@
-# version: 2
-# sources:
-#   - name: market_basket
-#     description: source MASKET_basket data
-#     database: MARKET_BASKET
-#     schema: PUBLIC
-#     tables:
-#       - name: AISLE
-#         description: main table
-#       - name: DEPARTMENT
-#         description: main table        
-#       - name: ORDERS
-#         description: main table 
-#       - name: ORDER_PRODUCTS
-#         description: main table               
-#       - name: ORDER_PRODUCTS_PRIOR
-#         description: main table 
-#       - name: PRODUCTS
-#         description: main table             
 version: 2
 sources:
   - name: market_basket
     description: source MASKET_basket data
-    database: 
-      {%- if  target.name == "dev" -%} MARKET_BASKET
-      {%- elif target.name == "pre"  -%} MARKET_BASKET
-      {%- else -%} invalid_database
-      {%- endif -%}
+    database: MARKET_BASKET
     schema: PUBLIC
     tables:
       - name: AISLE
@@ -39,4 +16,27 @@ sources:
       - name: ORDER_PRODUCTS_PRIOR
         description: main table 
       - name: PRODUCTS
-        description: main table         
+        description: main table             
+# version: 2
+# sources:
+#   - name: market_basket
+#     description: source MASKET_basket data
+#     database: 
+#       {%- if  target.name == "dev" -%} MARKET_BASKET
+#       {%- elif target.name == "pre"  -%} MARKET_BASKET
+#       {%- else -%} invalid_database
+#       {%- endif -%}
+#     schema: PUBLIC
+#     tables:
+#       - name: AISLE
+#         description: main table
+#       - name: DEPARTMENT
+#         description: main table        
+#       - name: ORDERS
+#         description: main table 
+#       - name: ORDER_PRODUCTS
+#         description: main table               
+#       - name: ORDER_PRODUCTS_PRIOR
+#         description: main table 
+#       - name: PRODUCTS
+#         description: main table         
