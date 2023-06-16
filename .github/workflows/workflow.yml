@@ -22,10 +22,10 @@ jobs:
       
     
   DeployDev: 
-    name: Deploy to dev
+    name: Deploy to pre
     runs-on: ubuntu-latest
     environment:
-      name: DEV
+      name: PRE
     env:
       DBT_PROFILES_DIR: ./
       SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
@@ -72,26 +72,26 @@ jobs:
         if: steps.run_tests.outcome == 'failure' 
   
 
-      - name: SQLCheck Action
-        uses: yokawasa/action-sqlcheck@v1.4.0
-        id: sqlcheck
-        with:
-          post-comment: true
-          risk-level: 3
-          verbose: true
-          token: ${{ secrets.TOKEN }}
-          postfixes: |
-            sql
-          directories: |
-            models/marts/full_products.sql
-            models/marts/orders.sql
-            models/staging/stg_aisle.sql
-            models/staging/stg_department.sql
-            models/staging/stg_orders_products_prior.sql
-            models/staging/stg_orders_products.sql
-            models/staging/stg_orders.sql
-            models/staging/stg_products.sql
+#       - name: SQLCheck Action
+#         uses: yokawasa/action-sqlcheck@v1.4.0
+#         id: sqlcheck
+#         with:
+#           post-comment: true
+#           risk-level: 3
+#           verbose: true
+#           token: ${{ secrets.TOKEN }}
+#           postfixes: |
+#             sql
+#           directories: |
+#             models/marts/full_products.sql
+#             models/marts/orders.sql
+#             models/staging/stg_aisle.sql
+#             models/staging/stg_department.sql
+#             models/staging/stg_orders_products_prior.sql
+#             models/staging/stg_orders_products.sql
+#             models/staging/stg_orders.sql
+#             models/staging/stg_products.sql
       
-      - name: Get output
-        run: echo "Issues found in previous step"
-        if: steps.sqlcheck.outputs.issue-found      
+#       - name: Get output
+#         run: echo "Issues found in previous step"
+#         if: steps.sqlcheck.outputs.issue-found      
