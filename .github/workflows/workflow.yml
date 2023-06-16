@@ -1,4 +1,4 @@
-name: PRE_WORKFLOW
+name: Run workflow
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
     name: Deploy to dev
     runs-on: ubuntu-latest
     environment:
-      name: PRE
+      name: DEV
     env:
       DBT_PROFILES_DIR: ./
       SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
@@ -68,6 +68,30 @@ jobs:
           snowflake_password: ${{  secrets.SF_PASSWORD }} 
           snowflake_username: ${{  secrets.SF_USERNAME }}
           snowflake_warehouse: ${{  secrets.SF_WAREHOUSE }}
-          queries: 'DROP SCHEMA MARKET_BASKET.REPORT'
+          queries: 'DROP SCHEMA MASTER_BASKET.REPORT'
         if: steps.run_tests.outcome == 'failure' 
+  
 
+      - name: SQLCheck Action
+        uses: yokawasa/action-sqlcheck@v1.4.0
+        id: sqlcheck
+        with:
+          post-comment: true
+          risk-level: 3
+          verbose: true
+          token: ${{ secrets.TOKEN }}
+          postfixes: |
+            sql
+          directories: |
+            models/marts/full_products.sql
+            models/marts/orders.sql
+            models/staging/stg_aisle.sql
+            models/staging/stg_department.sql
+            models/staging/stg_orders_products_prior.sql
+            models/staging/stg_orders_products.sql
+            models/staging/stg_orders.sql
+            models/staging/stg_products.sql
+      
+      - name: Get output
+        run: echo "Issues found in previous step"
+        if: steps.sqlcheck.outputs.issue-found      
