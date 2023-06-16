@@ -1,0 +1,23 @@
+snowflake-db:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SF_ACCOUNT') }}"
+      user: "{{ env_var('SF_USERNAME') }}"
+      password: "{{ env_var('SF_PASSWORD') }}"
+      role: "{{ env_var('SF_ROLE') }}"
+      database: "{{ env_var('SF_DATABASE') }}"
+      warehouse: "{{ env_var('SF_WAREHOUSE') }}"
+      schema: "{{ env_var('SF_SCHEMA') }}"
+      client_session_keep_alive: False
+
+    pre:
+      account: "{{ env_var('SF_ACCOUNT') }}"
+      user: "{{ env_var('SF_USERNAME') }}"
+      password: "{{ env_var('SF_PASSWORD') }}"
+      role: "{{ env_var('SF_ROLE') }}"
+      database: "{{ env_var('SF_DATABASE') }}"
+      warehouse: "{{ env_var('SF_WAREHOUSE') }}"
+      schema: "{{ env_var('SF_SCHEMA') }}"
+      client_session_keep_alive: False
