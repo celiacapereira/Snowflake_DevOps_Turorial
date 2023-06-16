@@ -82,7 +82,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           postfixes: |
             sql
-          directories: |
+          directories: 
             models/marts/full_products.sql
             models/marts/orders.sql
             models/staging/stg_aisle.sql
