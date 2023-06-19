@@ -1,0 +1,100 @@
+name: Run workflow
+
+on:
+  push:
+  pull_request:
+    branches: [ "pre_branch" ]
+# env:
+#   DBT_PROFILES_DIR: ./
+#   SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+#   SF_DATABASE: ${{  secrets.SF_DATABASE }}
+#   SF_PASSWORD: ${{  secrets.SF_PASSWORD }} 
+#   SF_ROLE: ${{  secrets.SF_ROLE }}
+#   SF_SCHEMA: ${{  secrets.SF_SCHEMA }}
+#   SF_USERNAME: ${{  secrets.SF_USERNAME }}
+#   SF_WAREHOUSE: ${{  secrets.SF_WAREHOUSE }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      
+    
+  DeployDev: 
+    name: Deploy to pre
+    runs-on: ubuntu-latest
+    environment:
+      name: PRE
+    env:
+      DBT_PROFILES_DIR: ./
+      SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+      SF_DATABASE: ${{  secrets.SF_DATABASE }}
+      SF_PASSWORD: ${{  secrets.SF_PASSWORD }} 
+      SF_ROLE: ${{  secrets.SF_ROLE }}
+      SF_SCHEMA: ${{  secrets.SF_SCHEMA }}
+      SF_USERNAME: ${{  secrets.SF_USERNAME }}
+      SF_WAREHOUSE: ${{  secrets.SF_WAREHOUSE }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@master
+    
+      - name: Checkout Repository
+        uses: actions/checkout@v2  
+        
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.7.x"   
+          
+         
+      - name: Install dependencies
+        run: |
+         pip install dbt-snowflake
+         dbt deps   
+      
+      - name: Run dbt models
+        id: run_models 
+        run: dbt run --target pre
+
+      - name: Test dbt models
+        id: run_tests
+        run: dbt test
+        continue-on-error: true        
+
+      - name: Snowflake Query Action
+        uses: anecdotes-ai/snowflake-query@1.1      
+        with:
+          snowflake_account: ${{ secrets.SF_ACCOUNT }}
+          snowflake_password: ${{  secrets.SF_PASSWORD }} 
+          snowflake_username: ${{  secrets.SF_USERNAME }}
+          snowflake_warehouse: ${{  secrets.SF_WAREHOUSE }}
+          queries: 'DROP SCHEMA MASTER_BASKET.REPORT'
+        if: steps.run_tests.outcome == 'failure' 
+  
+
+      - name: SQLCheck Action
+        uses: yokawasa/action-sqlcheck@v1.4.0
+        id: sqlcheck
+        with:
+          post-comment: true
+          risk-level: 3
+          verbose: true
+          token: ${{ secrets.TOKEN }}
+          postfixes: |
+            sql
+          directories: 
+#             models/marts/full_products.sql
+#             models/marts/orders.sql
+#             models/staging/stg_aisle.sql
+#             models/staging/stg_department.sql
+#             models/staging/stg_orders_products_prior.sql
+#             models/staging/stg_orders_products.sql
+#             models/staging/stg_orders.sql
+#             models/staging/stg_products.sql
+              models/staging/*
+              models/marts/*
+              
+      
+      - name: Get output
+        run: echo "Issues found in previous step"
+        if: steps.sqlcheck.outputs.issue-found      
