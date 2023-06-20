@@ -1,5 +1,4 @@
 version: 2
-
 models:
   - name: full_products
     description: products with all information
