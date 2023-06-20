@@ -13,6 +13,7 @@ snowflake-db:
       client_session_keep_alive: False
 
     pre:
+      type: snowflake
       account: "{{ env_var('SF_ACCOUNT') }}"
       user: "{{ env_var('SF_USERNAME') }}"
       password: "{{ env_var('SF_PASSWORD') }}"
