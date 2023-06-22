@@ -1,0 +1,22 @@
+WITH ORDERS_PRODUCTS AS (
+SELECT
+    ORDER_ID,
+    PRODUCT_ID,
+    ADD_TO_CART_ORDER,
+    REORDER
+    FROM {{ ref('stg_orders_products') }}
+),
+FINAL AS (
+    SELECT
+    ORDER_ID,
+    PRODUCT_ID,
+    ADD_TO_CART_ORDER,
+    REORDER
+    FROM ORDERS_PRODUCTS
+)
+select
+    ORDER_ID,
+    PRODUCT_ID,
+    ADD_TO_CART_ORDER,
+    REORDER
+    DER from final
