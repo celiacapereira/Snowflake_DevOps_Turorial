@@ -1,5 +1,4 @@
 name: dev_workflow
-
 on:
   push:
   pull_request:
