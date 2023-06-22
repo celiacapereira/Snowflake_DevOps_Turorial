@@ -47,4 +47,22 @@ models:
         tests:
           - not_null        
       - name: DAYS_SINCE_PRIOR_ORDER
-        description: department name                 
+        description: department name       
+
+    - name: ORDER_PRODUCTS
+      description: products with all information
+      columns:
+        - name: ORDER_ID
+          description: primary key of the model
+          tests:
+            - unique
+            - not_null
+        - name: PRODUCT_ID
+          description: Product id
+          tests:
+            - not_null        
+        - name: ADD_TO_CART_ORDER
+          description: ADD_TO_CART_ORDER     
+        - name: ORDER_HOUR_OF_DAY
+          description: department name  
+       
