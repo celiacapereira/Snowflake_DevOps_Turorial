@@ -49,7 +49,7 @@ jobs:
 
       - name: Test dbt models
         id: run_tests
-        run: dbt test
+        run: dbt test --target pre
         continue-on-error: true        
 
       - name: Snowflake Query Action
